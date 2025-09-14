@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Real Estate Management System</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: Arial, sans-serif;
+  background-image: url('https://dharmainfraproject.com/wp-content/uploads/2023/03/Cm-B-N8-scaled-1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: #333;
+}
+/* Container is limited width & center aligned */
+.container {
+  background: rgba(255, 255, 255, 0.9);
+  max-width: 700px;   /* Reduced width */
+  margin: 40px auto;  /* Center horizontally and add vertical spacing */
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* Cards also reduced a bit for compactness */
+.card {
+  background: #fffceddd; /* slightly translucent white */
+  padding: 20px 25px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+h2 { color: #2c3e50; margin-bottom: 12px; font-size: 1.8rem; }
+input, select, button, textarea {
+  padding: 10px; margin: 8px 0; width: 100%;
+  border: 1px solid #ccc; border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 5px #3498dba0;
+}
+button {
+  background: #3498db; color: white; cursor: pointer; border: none;
+  transition: background-color 0.25s ease;
+  font-size: 1rem;
+}
+button:hover { background: #2980b9; }
+.hidden { display: none; }
+img { max-width: 100%; border-radius: 8px; margin-top: 10px; }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+table, th, td { border: 1px solid #ccc; }
+th, td { padding: 8px; text-align: left; }
+th { background: #f0f0f0; }
+nav {
+  background: rgba(44, 62, 80, 0.95);
+  padding: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+nav .logo { font-size: 1.5em; font-weight: bold; }
+nav .nav-links a {
+  color: white; margin-left: 20px; text-decoration: none; font-weight: bold;
+  transition: color 0.2s;
+}
+nav .nav-links a:hover {
+  color: #f39c12;
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+<!-- NAVIGATION -->
+<nav id="navbar" class="hidden">
+  <div class="logo">🏠 Real Estate</div>
+  <div class="nav-links" id="nav-links">
+    <a href="#" onclick="navigate('info')">Info</a>
+    <a href="#" id="buyer-link" class="hidden" onclick="navigate('buyer-dashboard')">Buyer Dashboard</a>
+    <a href="#" id="seller-link" class="hidden" onclick="navigate('seller-dashboard')">Seller Dashboard</a>
+    <a href="#" onclick="navigate('profile')">Profile</a>
+    <a href="#" onclick="navigate('area')">Area</a>
+    <a href="#" onclick="navigate('integration')">Integration</a>
+    <a href="#" onclick="navigate('contact')">Contact Seller</a>
+    <a href="#" onclick="logout()">Logout</a>
+  </div>
+</nav>
+<!-- MAIN CONTAINER -->
+<div class="container">
+  <!-- LOGIN -->
+  <div id="login">
+    <div class="card">
+      <h2>Login</h2>
+      <input type="text" id="username" placeholder="Username" />
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <p>Don't have an account? <a href="#" onclick="showSignup()">Sign Up</a></p>
+      <img src="images/login.jpg" alt="Login" />
+    </div>
+  </div>
+  <!-- SIGN UP -->
+  <div id="signup" class="hidden">
+    <div class="card">
+      <h2>Sign Up</h2>
+      <input type="text" id="new-username" placeholder="Choose Username" />
+      <input type="password" id="new-password" placeholder="Choose Password" />
+      <select id="new-role">
+        <option value="buyer">Buyer</option>
+        <option value="seller">Seller</option>
+      </select>
+      <button onclick="signup()">Sign Up</button>
+      <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+      <img src="images/signup.jpg" alt="Sign Up" />
+    </div>
+  </div>
+  <!-- INFO PAGE -->
+  <div id="info" class="hidden">
+    <div class="card">
+      <h2>ℹ️ Real Estate Information</h2>
+      <h3>🗺️ Land Types</h3>
+      <ul>
+        <li><strong>Residential Land:</strong> For homes, apartments, and communities.</li>
+        <li><strong>Commercial Land:</strong> For shops, offices, and business centers.</li>
+        <li><strong>Agricultural Land:</strong> Farms, crops, and rural development.</li>
+      </ul>
+      <h3>🏘️ Property Categories</h3>
+      <ul>
+        <li>Houses & Villas</li>
+        <li>Apartments/Flats</li>
+        <li>Shops & Offices</li>
+        <li>Plots</li>
+      </ul>
+      <h3>🛠️ How It Works</h3>
+      <ol>
+        <li><strong>Login:</strong> Secure login for buyers and sellers.</li>
+        <li><strong>View Properties:</strong> Browse and shortlist listings.</li>
+        <li><strong>Contact Sellers:</strong> Communicate directly for deals.</li>
+        <li><strong>Area Registration:</strong> Subscribe to area alerts.</li>
+        <li><strong>Manage Listings:</strong> Sellers can edit and track properties.</li>
+      </ol>
+      <img src="images/info.jpg" alt="Info" />
+    </div>
+  </div>
+  <!-- BUYER DASHBOARD -->
+  <div id="buyer-dashboard" class="hidden">
+    <div class="card">
+      <h2>Welcome Buyer 👨‍💼</h2>
+      <img src="images/buyer-dashboard.jpg" alt="Buyer Dashboard" />
+      <p>Explore properties, save favorites, and connect with sellers instantly.</p>
+      <h3>🔎 Search Properties</h3>
+      <input type="text" id="buyer-location" placeholder="Location" />
+      <input type="number" id="buyer-maxprice" placeholder="Max Price" />
+      <select id="buyer-property-type">
+        <option value="">Property Type</option>
+        <option value="House">House</option>
+        <option value="Plot">Plot</option>
+        <option value="Apartment">Apartment</option>
+        <option value="Commercial">Commercial</option>
+        <option value="Agricultural">Agricultural</option>
+      </select>
+      <button onclick="searchProperties()">Search</button>
+      <div id="search-results"></div>
+      <h3>⭐ Featured Listings</h3>
+      <p>View top-rated and trending properties in your area.</p>
+      <h3>❤️ Save Favorite Properties</h3>
+      <button onclick="saveFavorite()">Save to Favorites</button>
+      <p>Saved properties will appear in your profile.</p>
+      <h3>📞 Contact Seller</h3>
+      <button onclick="sendEnquiry()">Send Enquiry</button>
+      <h3>🔔 Notifications</h3>
+      <ul>
+        <li>New property added in your area.</li>
+        <li>Price dropped for your saved property.</li>
+        <li>Seller replied to your enquiry.</li>
+      </ul>
+    </div>
+  </div>
+  <!-- SELLER DASHBOARD -->
+  <div id="seller-dashboard" class="hidden">
+    <div class="card">
+      <h2>Seller Dashboard 👩‍💼</h2>
+      <img src="images/seller-dashboard.jpg" alt="Seller Dashboard" />
+      <p>Manage your property listings, respond to buyers, and track performance.</p>
+      <h3>🏡 Insert New Property</h3>
+      <input type="text" id="property-title" placeholder="Title" />
+      <textarea id="property-description" placeholder="Description"></textarea>
+      <input type="number" id="property-price" placeholder="Price" />
+      <select id="property-type">
+        <option value="">Property Type</option>
+        <option value="House">House</option>
+        <option value="Plot">Plot</option>
+        <option value="Apartment">Apartment</option>
+        <option value="Commercial">Commercial</option>
+        <option value="Agricultural">Agricultural</option>
+      </select>
+      <input type="file" id="property-image" />
+      <input type="text" id="property-location" placeholder="Location" />
+      <button onclick="addProperty()">Add Property</button>
+      <h3>⚙️ Manage Listings</h3>
+      <table>
+        <thead>
+          <tr><th>Property</th><th>Action</th></tr>
+        </thead>
+        <tbody id="listings-body">
+          <tr>
+            <td>2BHK Apartment in Hyderabad</td>
+            <td>
+              <button onclick="updateListing(this)">Update</button>
+              <button onclick="deleteListing(this)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>📩 Buyer Enquiries</h3>
+      <ul>
+        <li>Ravi Kumar: Interested in 2BHK Apartment.</li>
+        <li>Anjali Sharma: Asked for price negotiation.</li>
+      </ul>
+      <h3>📊 Sales Analytics</h3>
+      <p>Views: 120 | Buyer Interests: 15 | Successful Deals: 3</p>
+    </div>
+  </div>
+  <!-- PROFILE -->
+  <div id="profile" class="hidden">
+    <div class="card">
+      <h2>Your Profile</h2>
+      <img src="images/profile.jpg" alt="Profile" />
+      <p><strong>Username:</strong> <span id="profile-username"></span></p>
+      <p><strong>Role:</strong> <span id="profile-role"></span></p>
+      <h3>Saved Favorites:</h3>
+      <ul id="favorite-properties"></ul>
+    </div>
+  </div>
+  <!-- AREA REGISTRATION -->
+  <div id="area" class="hidden">
+    <div class="card">
+      <h2>Area Type Registration</h2>
+      <label for="area-select">Choose an area type:</label>
+      <select id="area-select">
+        <option value="Urban">Urban</option>
+        <option value="Suburban">Suburban</option>
+        <option value="Rural">Rural</option>
+      </select>
+      <button onclick="registerArea()">Register Area</button>
+      <p id="area-result"></p>
+      <img src="images/area.jpg" alt="Area Registration" />
+    </div>
+  </div>
+  <!-- INTEGRATION -->
+  <div id="integration" class="hidden">
+    <div class="card">
+      <h2>🔗 System Integrations</h2>
+      <h3>🗺️ Google Maps API</h3>
+      <p>View property location and nearby amenities.</p>
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18..." width="100%" height="300" style="border:0;"></iframe>
+      <h3>💳 Payment Gateway</h3>
+      <p>Secure payments through Razorpay, Stripe, etc.</p>
+      <h3>📢 SMS/Email Notifications</h3>
+      <p>Get real-time updates for listings, offers, and appointments.</p>
+      <h3>📂 Real-Time Listings</h3>
+      <p>Automatic property data sync from trusted platforms.</p>
+      <img src="images/integration.jpg" alt="Integration" />
+    </div>
+  </div>
+  <!-- CONTACT -->
+  <div id="contact" class="hidden">
+    <div class="card">
+      <h2>Contact Seller</h2>
+      <p><strong>Name:</strong> John Realtor</p>
+      <p><strong>Email:</strong> johnrealtor@example.com</p>
+      <p><strong>Phone:</strong> +91-9876543210</p>
+      <img src="images/contact.jpg" alt="Contact Seller" />
+    </div>
+  </div>
+</div>
+<script>
+// SIGNUP - allow duplicate usernames: Removed uniqueness check
+function signup() {
+const user = document.getElementById("new-username").value.trim();
+const pass = document.getElementById("new-password").value.trim();
+const role = document.getElementById("new-role").value;
+if (user && pass) {
+let users = JSON.parse(localStorage.getItem("users")) || {};
+// Removed the check for user existence to allow duplicates
+users[user] = { password: pass, role: role };
+localStorage.setItem("users", JSON.stringify(users));
+alert("Signup successful! Please login.");
+showLogin();
+} else {
+alert("Please enter all details.");
+}
+}
+// LOGIN
+function login() {
+const user = document.getElementById("username").value.trim();
+const pass = document.getElementById("password").value.trim();
+let users = JSON.parse(localStorage.getItem("users")) || {};
+if (users[user] && users[user].password === pass) {
+sessionStorage.setItem("user", user);
+sessionStorage.setItem("role", users[user].role);
+document.getElementById("login").classList.add("hidden");
+document.getElementById("signup").classList.add("hidden");
+document.getElementById("navbar").classList.remove("hidden");
+// Show/hide navbar links based on role
+if (users[user].role === "buyer") {
+document.getElementById("buyer-link").classList.remove("hidden");
+document.getElementById("seller-link").classList.add("hidden");
+navigate("buyer-dashboard");
+loadFavorites();
+} else if (users[user].role === "seller") {
+document.getElementById("seller-link").classList.remove("hidden");
+document.getElementById("buyer-link").classList.add("hidden");
+navigate("seller-dashboard");
+loadSellerListings();
+} else {
+navigate("info");
+}
+} else {
+alert("Invalid username or password.");
+}
+}
+function logout() {
+sessionStorage.clear();
+location.reload();
+}
+function navigate(section) {
+const sections = [
+"buyer-dashboard","seller-dashboard","info","profile","area","integration","contact"
+];
+sections.forEach(id => document.getElementById(id).classList.add("hidden"));
+document.getElementById(section).classList.remove("hidden");
+if (section === "profile") {
+document.getElementById("profile-username").textContent = sessionStorage.getItem("user");
+document.getElementById("profile-role").textContent = sessionStorage.getItem("role");
+loadFavorites();
+}
+}
+// AREA REGISTRATION
+function registerArea() {
+const area = document.getElementById("area-select").value;
+document.getElementById("area-result").textContent = `✅ Registered for updates in ${area} areas.`;
+}
+// Show Signup/Login
+function showSignup() {
+document.getElementById("login").classList.add("hidden");
+document.getElementById("signup").classList.remove("hidden");
+}
+function showLogin() {
+document.getElementById("signup").classList.add("hidden");
+document.getElementById("login").classList.remove("hidden");
+}
+// Buyer Dashboard Functions
+function searchProperties() {
+const location = document.getElementById("buyer-location").value.trim();
+const maxPrice = document.getElementById("buyer-maxprice").value;
+const propertyType = document.getElementById("buyer-property-type").value;
+let resultsDiv = document.getElementById("search-results");
+if (propertyType === "Plot") {
+// Automatically add searched Plot to favorites and inform user
+addFavoriteProperty("Plot in " + (location || "specified location"));
+resultsDiv.innerHTML = "<p>Plot property added to favorites automatically.</p>";
+loadFavorites();
+return;
+}
+if (!location && !maxPrice && !propertyType) {
+resultsDiv.innerHTML = "<p>Please enter search criteria.</p>";
+return;
+}
+// Dummy search result simulation for other property types
+let resultsHTML = `<h4>Search Results:</h4><ul>`;
+resultsHTML += `<li>${propertyType || 'Any'} property in ${location || 'any location'} under ₹${maxPrice || 'any price'}</li>`;
+resultsHTML += `<li>3BHK House in Mumbai - ₹50,00,000</li>`;
+resultsHTML += `<li>2BHK Apartment in Hyderabad - ₹35,00,000</li>`;
+resultsHTML += `</ul>`;
+resultsDiv.innerHTML = resultsHTML;
+}
+function addFavoriteProperty(propertyName) {
+const user = sessionStorage.getItem("user");
+if (!user) {
+alert("Please login to save favorites.");
+return;
+}
+let favorites = JSON.parse(localStorage.getItem("favorites")) || {};
+if (!favorites[user]) {
+favorites[user] = [];
+}
+if (favorites[user].indexOf(propertyName) === -1) {
+favorites[user].push(propertyName);
+localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+}
+function saveFavorite() {
+const user = sessionStorage.getItem("user");
+if (!user) {
+alert("Please login to save favorites.");
+return;
+}
+const location = document.getElementById("buyer-location").value.trim();
+const propertyType = document.getElementById("buyer-property-type").value || "Sample Property";
+const favoriteName = propertyType + " in " + (location || "specified location");
+let favorites = JSON.parse(localStorage.getItem("favorites")) || {};
+if (!favorites[user]) {
+favorites[user] = [];
+}
+if (favorites[user].indexOf(favoriteName) === -1) {
+favorites[user].push(favoriteName);
+localStorage.setItem("favorites", JSON.stringify(favorites));
+alert("Property saved to favorites.");
+loadFavorites();
+} else {
+alert("This property is already in your favorites.");
+}
+}
+function loadFavorites() {
+const user = sessionStorage.getItem("user");
+const favList = document.getElementById("favorite-properties");
+if (!favList) return;
+favList.innerHTML = "";
+if (!user) return;
+let favorites = JSON.parse(localStorage.getItem("favorites")) || {};
+if (!favorites[user]) return;
+favorites[user].forEach(prop => {
+let li = document.createElement("li");
+li.textContent = prop;
+favList.appendChild(li);
+});
+}
+function sendEnquiry() {
+alert("Enquiry sent to the seller. They will contact you soon.");
+}
+// Seller Dashboard Functions
+function addProperty() {
+const title = document.getElementById("property-title").value.trim();
+const description = document.getElementById("property-description").value.trim();
+const price = document.getElementById("property-price").value.trim();
+const type = document.getElementById("property-type").value;
+const location = document.getElementById("property-location").value.trim();
+if (!title || !description || !price || !type || !location) {
+alert("Please fill all property details.");
+return;
+}
+// Add the property to the listings table dynamically.
+const tbody = document.getElementById("listings-body");
+let newRow = document.createElement("tr");
+let propCell = document.createElement("td");
+propCell.textContent = `${title} in ${location}`;
+newRow.appendChild(propCell);
+let actionCell = document.createElement("td");
+let updateBtn = document.createElement("button");
+updateBtn.textContent = "Update";
+updateBtn.onclick = function() { updateListing(updateBtn); };
+let deleteBtn = document.createElement("button");
+deleteBtn.textContent = "Delete";
+deleteBtn.onclick = function() { deleteListing(deleteBtn); };
+actionCell.appendChild(updateBtn);
+actionCell.appendChild(deleteBtn);
+newRow.appendChild(actionCell);
+tbody.appendChild(newRow);
+alert("Property added successfully!");
+// Clear fields
+document.getElementById("property-title").value = "";
+document.getElementById("property-description").value = "";
+document.getElementById("property-price").value = "";
+document.getElementById("property-type").value = "";
+document.getElementById("property-image").value = "";
+document.getElementById("property-location").value = "";
+}
+function updateListing(button) {
+let row = button.closest("tr");
+let propCell = row.cells[0];
+let newTitle = prompt("Update property title and location:", propCell.textContent);
+if (newTitle && newTitle.trim() !== "") {
+propCell.textContent = newTitle.trim();
+}
+}
+function deleteListing(button) {
+if (confirm("Are you sure you want to delete this listing?")) {
+let row = button.closest("tr");
+row.remove();
+alert("Listing deleted.");
+}
+}
+function loadSellerListings() {
+// Placeholder for loading seller data if needed
+}
+</script>
+</body>
+</html>
